@@ -9,6 +9,7 @@ class sort {
     def recursiveSorting(a: Array[Int], acc: Int, border: Int): Array[Int] = {
       if (border < 1) a
       else if (acc <= border)
+        if(a(acc)>a(acc+1)) recursiveSorting(swap(a, acc, acc+1), acc+1, border)
         else recursiveSorting(a, acc+1, border)
       else recursiveSorting(a, 0, border-1)
     }  
