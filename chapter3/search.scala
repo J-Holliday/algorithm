@@ -19,9 +19,9 @@ class search[+A] {
   }
 
   def binarySearch(a: Array[Int], key: Int): (Option[Int], Int) = {
-    def recursiveMatching(acc: Int, a: Array[Int], key: Int, head: Int, tail: Int, center: Int): (Int, Boolean) = {
-      if (head==tail && a(center)!=key) (acc, false) 
-      else if (a(center)==key) (acc, true)
+    def recursiveMatching(acc: Int, a: Array[Int], key: Int, head: Int, tail: Int, center: Int): (Int, Int, Boolean) = {
+      if (head==tail && a(center)!=key) (-1, acc, false) 
+      else if (a(center)==key) (center, acc, true)
       else recursiveMatching(acc+1, a, key,
         if (a(center)< key) center+1 else head,
         if (a(center)> key) center-1 else tail,
@@ -29,8 +29,8 @@ class search[+A] {
     }
     
     recursiveMatching(0, a, key, 0, a.length-1, (a.length-1)/2) match {
-      case (acc, false) => (None, acc+1)
-      case (acc, true) => (Some(a(acc)), acc+1)
+      case (res, acc, false) => (None, acc+1)
+      case (res, acc, true) => (Some(a(res)), acc+1)
     }
   }
 }
