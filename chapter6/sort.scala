@@ -20,34 +20,50 @@ class sort {
     val buf = a(x); a(x) = a(y); a(y) = buf; a
   }
 
-  def shuttleSort(a: Array[Int]): (Array[Int], Int) = {
-    def recursiveSorting(a: Array[Int], current: Int, n: Int, acc: Int): (Array[Int], Int) = {
-      if (current >= a.length) (a, acc)
+  def shuttleSort(a: Array[Int]): Array[Int] = {
+    def recursiveSorting(a: Array[Int], current: Int, n: Int): Array[Int] = {
+      if (current >= a.length) a
       else if (n < current) {
-        if (a(n) > a(current)) recursiveSorting(swap(a, n, current), current, n+1, acc+1)
-        else recursiveSorting(a, current, n+1, acc+1)
+        if (a(n) > a(current)) recursiveSorting(swap(a, n, current), current, n+1)
+        else recursiveSorting(a, current, n+1)
       }
-      else recursiveSorting(a, current+1, 0, acc+1)
+      else recursiveSorting(a, current+1, 0)
     }
-    recursiveSorting(a, 1, 0, 0)
+    recursiveSorting(a, 1, 0)
   }
 
-  def shellSort(a: Array[Int]): (Array[Int], Int) = {
-    def recursiveSorting(a: Array[Int], divider: Int, n: Int, acc: Int): (Array[Int], Int) = {
-      if (divider < 1) (a, acc)
-      else if(n >= divider) recursiveSorting(a, divider/2, 0, acc+1)
-      else {
-        shuttleSort(grouping(a, divider, 0, n, acc+1)._1)
-        recursiveSorting(a, divider, n+1, acc+1)
-      }
+  /*
+  def partlyShuttleSort(a: Array[Int], divider: Int, n: Int, compared: Int): Array[Int] = {
+    if (n >= a.length-1) a
+    else if (compared > a.length-1) partlyShuttleSort(a, divider, n+1, n+1+divider)
+    else if (a(n) > a(compared)) partlyShuttleSort(swap(a, n, compared), divider, n, compared+divider)
+    else partlyShuttleSort(a, divider, n, compared+divider)
+  }
+  */
+  
+  def partlyShuttleSort(a: Array[Int], divider: Int, current: Int, n: Int): Array[Int] = {
+    if (n > a.length-1) 
+      if (current < a.length-1) partlyShuttleSort(a, divider, current+divider, current+divider*2)
+      else a
+    else if (a(current) > a(n)) partlyShuttleSort(swap(a, n, current), divider, current, n+divider)
+    else partlyShuttleSort(a, divider, current, n+divider)
+  }
+
+  def shellSort(a: Array[Int]): Array[Int] = {
+  
+    def selectSequence(a: Array[Int], divider: Int, groupSeq: Int): Array[Int] = {
+   	  if (divider < 1) a
+      else if(groupSeq >= divider) selectSequence(a, divider/2, 0)
+      else selectSequence(partlyShuttleSort(a, divider, groupSeq, groupSeq+divider), divider, groupSeq+1)
     }
-    def grouping(a: Array[Int], divider: Int, buf: Int, start: Int, acc: Int): (Array[Int], Int) = {
-      if (buf > a.length-1) (a, acc)
-      //else Array.concat(Array(a(start+buf)), grouping(a, divider, buf+divider, start, acc+1)._1), acc)
-      else grouping(a, divider, buf+divider, start, acc+1) match {
-        case (ary, accum) => (Array.concat(Array(a(start+buf)), ary), accum)
-      }
+    /*
+    def partlyShuttleSort(a: Array[Int], divider: Int, n: Int, compared: Int): Array[Int] = {
+      if (compared > a.length-1) a
+      else if (a(n) > a(compared)) partlyShuttleSort(swap(a, n, compared), divider, n, compared+divider)
+      else partlyShuttleSort(a, divider, n, compared+divider)
     }
-    recursiveSorting(a, a.length/2, 0, 0)
+    */
+    
+    selectSequence(a, a.length/2, 0)
   }
 }
