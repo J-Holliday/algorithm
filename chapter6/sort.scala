@@ -32,15 +32,14 @@ class sort {
     recursiveSorting(a, 1, 0)
   }
 
-  def partlyShuttleSort(a: Array[Int], divider: Int, current: Int, n: Int): Array[Int] = {
-    if (n > a.length-1) 
-      if (current < a.length-1) partlyShuttleSort(a, divider, current+divider, current+divider*2)
-      else a
-    else if (a(current) > a(n)) partlyShuttleSort(swap(a, n, current), divider, current, n+divider)
-    else partlyShuttleSort(a, divider, current, n+divider)
-  }
-
   def shellSort(a: Array[Int]): Array[Int] = {
+    def partlyShuttleSort(a: Array[Int], divider: Int, current: Int, n: Int): Array[Int] = {
+      if (n > a.length-1) 
+        if (current < a.length-1) partlyShuttleSort(a, divider, current+divider, current+divider*2)
+        else a
+      else if (a(current) > a(n)) partlyShuttleSort(swap(a, n, current), divider, current, n+divider)
+      else partlyShuttleSort(a, divider, current, n+divider)
+    }
     def selectSequence(a: Array[Int], divider: Int, groupSeq: Int): Array[Int] = {
    	  if (divider < 1) a
       else if(groupSeq >= divider) selectSequence(a, divider/2, 0)
