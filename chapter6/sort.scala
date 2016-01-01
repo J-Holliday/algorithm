@@ -21,15 +21,17 @@ class sort {
   }
 
   def shuttleSort(a: Array[Int]): Array[Int] = {
+    /*
+      Shuttle Sort make partly sorted data in front part.
+      So it can stop swap method, but Bubble Sort can't.
+      This is advantage of Shuttle Sort.
+    */
     def recursiveSorting(a: Array[Int], current: Int, n: Int): Array[Int] = {
       if (current >= a.length) a
-      else if (n < current) {
-        if (a(n) > a(current)) recursiveSorting(swap(a, n, current), current, n+1)
-        else recursiveSorting(a, current, n+1)
-      }
-      else recursiveSorting(a, current+1, 0)
+      else if (n > 0 && a(n-1) > a(n)) recursiveSorting(swap(a, n-1, n), current, n-1)
+      else recursiveSorting(a, current+1, current+1)
     }
-    recursiveSorting(a, 1, 0)
+    recursiveSorting(a, 1, 1)
   }
 
   def shellSort(a: Array[Int]): Array[Int] = {
